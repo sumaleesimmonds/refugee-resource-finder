@@ -1,6 +1,7 @@
 # NYC Refugee and Immigrant Resource Finder
 
 ![Refugee Resource Finder demo](https://github.com/sumaleesimmonds/refugee-resource-finder/raw/main/ezgif-72169a87fff1903a.gif) 
+
 🔗 [View live demo](https://sumaleesimmonds.github.io/refugee-resource-finder/)
 A conversational AI chatbot that helps newly arrived refugees and immigrants
 in New York City find the resources they need in plain, simple language,
