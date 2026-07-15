@@ -1,823 +1,727 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NYC Resource Guide — Help for Newcomers</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --teal-deep:   #0d4f4a;
-      --teal-mid:    #1a7068;
-      --teal-light:  #e8f5f3;
-      --teal-border: #b2dbd7;
-      --cream:       #fdf8f2;
-      --warm-white:  #ffffff;
-      --sand:        #f0e9dd;
-      --text-dark:   #1a1a1a;
-      --text-mid:    #3d4a48;
-      --text-muted:  #6b7c79;
-      --gold:        #c8924a;
-      --gold-light:  #fdf0e0;
-      --danger:      #c0392b;
-      --radius-sm:   6px;
-      --radius-md:   12px;
-      --radius-lg:   20px;
-      --shadow-sm:   0 1px 4px rgba(0,0,0,0.08);
-      --shadow-md:   0 4px 16px rgba(0,0,0,0.10);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--cream);
-      color: var(--text-dark);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Header ── */
-    header {
-      background: var(--teal-deep);
-      padding: 0;
-    }
-
-    .header-inner {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 28px 24px 24px;
-    }
-
-    .header-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--teal-border);
-      margin-bottom: 14px;
-    }
-
-    .header-title {
-      font-family: 'Lora', serif;
-      font-size: clamp(26px, 5vw, 38px);
-      font-weight: 600;
-      color: #ffffff;
-      line-height: 1.2;
-      margin-bottom: 10px;
-    }
-
-    .header-subtitle {
-      font-size: 15px;
-      color: var(--teal-border);
-      font-weight: 300;
-      line-height: 1.6;
-      max-width: 540px;
-    }
-
-    /* ── Category pills ── */
-    .category-bar {
-      background: var(--teal-mid);
-      padding: 14px 24px;
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .category-bar-inner {
-      max-width: 860px;
-      margin: 0 auto;
-      display: flex;
-      gap: 8px;
-    }
-
-    .cat-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.75);
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s;
-      flex-shrink: 0;
-    }
-
-    .cat-pill:hover, .cat-pill.active {
-      background: rgba(255,255,255,0.22);
-      color: #fff;
-      border-color: rgba(255,255,255,0.35);
-    }
-
-    /* ── Main layout ── */
-    .main {
-      max-width: 860px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 28px 24px 60px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    /* ── Notice bar ── */
-    .notice {
-      background: var(--gold-light);
-      border: 1px solid #e8c98a;
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      font-size: 13px;
-      color: #7a5a20;
-      line-height: 1.5;
-    }
-
-    .notice strong { font-weight: 600; }
-
-    /* ── Chat window ── */
-    .chat-card {
-      background: var(--warm-white);
-      border: 1px solid #dde8e6;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .chat-messages {
-      padding: 24px 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-height: 320px;
-      max-height: 520px;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-    }
-
-    /* Scrollbar styling */
-    .chat-messages::-webkit-scrollbar { width: 4px; }
-    .chat-messages::-webkit-scrollbar-track { background: transparent; }
-    .chat-messages::-webkit-scrollbar-thumb { background: var(--teal-border); border-radius: 4px; }
-
-    /* ── Message bubbles ── */
-    .msg {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      max-width: 88%;
-    }
-
-    .msg.user {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-
-    .msg-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .msg.bot .msg-avatar {
-      background: var(--teal-deep);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: 'Lora', serif;
-    }
-
-    .msg.user .msg-avatar {
-      background: var(--sand);
-      color: var(--text-mid);
-    }
-
-    .msg-bubble {
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      font-size: 14.5px;
-      line-height: 1.65;
-      color: var(--text-dark);
-    }
-
-    .msg.bot .msg-bubble {
-      background: var(--teal-light);
-      border: 1px solid var(--teal-border);
-      border-top-left-radius: 4px;
-    }
-
-    .msg.user .msg-bubble {
-      background: var(--teal-deep);
-      color: #ffffff;
-      border-top-right-radius: 4px;
-    }
-
-    .msg-bubble p { margin-bottom: 8px; }
-    .msg-bubble p:last-child { margin-bottom: 0; }
-
-    .msg-bubble strong {
-      font-weight: 600;
-      color: var(--teal-deep);
-    }
-
-    .msg.user .msg-bubble strong { color: #ffffff; }
-
-    .msg-bubble a {
-      color: var(--teal-mid);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    /* Resource card inside bubble */
-    .resource-card {
-      background: #ffffff;
-      border: 1px solid var(--teal-border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      margin-top: 10px;
-      font-size: 13.5px;
-    }
-
-    .resource-card .rc-name {
-      font-weight: 600;
-      color: var(--teal-deep);
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-
-    .resource-card .rc-detail {
-      color: var(--text-mid);
-      line-height: 1.55;
-      margin-bottom: 3px;
-    }
-
-    .resource-card .rc-note {
-      color: var(--text-muted);
-      font-size: 12.5px;
-      font-style: italic;
-      margin-top: 6px;
-    }
-
-    /* Typing indicator */
-    .typing-indicator {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      max-width: 88%;
-    }
-
-    .typing-indicator.visible { display: flex; }
-
-    .typing-dots {
-      background: var(--teal-light);
-      border: 1px solid var(--teal-border);
-      border-radius: var(--radius-md);
-      border-top-left-radius: 4px;
-      padding: 12px 16px;
-      display: flex;
-      gap: 5px;
-      align-items: center;
-    }
-
-    .typing-dots span {
-      width: 7px;
-      height: 7px;
-      background: var(--teal-mid);
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
-
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-      30% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    /* ── Input area ── */
-    .chat-input-area {
-      border-top: 1px solid #dde8e6;
-      padding: 14px 16px;
-      background: #f8fbfa;
-    }
-
-    .quick-prompts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .quick-btn {
-      font-size: 12px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--teal-border);
-      background: #fff;
-      color: var(--teal-mid);
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-
-    .quick-btn:hover {
-      background: var(--teal-light);
-      border-color: var(--teal-mid);
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .chat-input {
-      flex: 1;
-      border: 1px solid #c5d8d5;
-      border-radius: var(--radius-md);
-      padding: 11px 14px;
-      font-size: 14.5px;
-      font-family: 'Inter', sans-serif;
-      color: var(--text-dark);
-      background: #fff;
-      resize: none;
-      min-height: 44px;
-      max-height: 120px;
-      line-height: 1.5;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .chat-input:focus { border-color: var(--teal-mid); }
-    .chat-input::placeholder { color: var(--text-muted); }
-
-    .send-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--teal-deep);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s;
-      flex-shrink: 0;
-    }
-
-    .send-btn:hover { background: var(--teal-mid); }
-    .send-btn:disabled { background: #aaa; cursor: not-allowed; }
-
-    .send-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: #fff;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* ── Crisis banner ── */
-    .crisis-banner {
-      background: #fff5f5;
-      border: 1px solid #f5c6c6;
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .crisis-icon {
-      font-size: 20px;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .crisis-content { flex: 1; }
-
-    .crisis-title {
-      font-weight: 600;
-      color: var(--danger);
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .crisis-text {
-      font-size: 13px;
-      color: #5a2020;
-      line-height: 1.55;
-    }
-
-    .crisis-text a {
-      color: var(--danger);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    /* ── About section ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-    }
-
-    .about-card {
-      background: var(--warm-white);
-      border: 1px solid #dde8e6;
-      border-radius: var(--radius-md);
-      padding: 18px;
-    }
-
-    .about-icon {
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-
-    .about-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--teal-deep);
-      margin-bottom: 5px;
-    }
-
-    .about-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    /* ── Footer ── */
-    footer {
-      background: var(--teal-deep);
-      padding: 24px;
-      text-align: center;
-    }
-
-    .footer-text {
-      font-size: 12.5px;
-      color: var(--teal-border);
-      line-height: 1.7;
-    }
-
-    .footer-text a { color: var(--teal-border); text-decoration: underline; }
-
-    .footer-dedication {
-      font-family: 'Lora', serif;
-      font-style: italic;
-      font-size: 13px;
-      color: rgba(255,255,255,0.5);
-      margin-top: 8px;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      .main { padding: 18px 14px 40px; }
-      .header-inner { padding: 22px 14px 18px; }
-      .chat-messages { max-height: 400px; }
-      .msg { max-width: 95%; }
-      .about-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .typing-dots span { animation: none; opacity: 1; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NYC Newcomer Resource Guide — Help for Refugees and Immigrants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --coral:#e05924;--cream:#fffcc4;--mint:#85fff3;--teal:#04d9c4;
+  --black:#0f0f0f;--white:#ffffff;--ink:#1a1a1a;--ink2:#4a4a4a;
+  --ink3:#909090;--line:#e8e8e8;--off:#fafaf8;--warm:#fdf8f0;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--warm);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+
+/* Cursor */
+#cursor{position:fixed;width:8px;height:8px;background:var(--coral);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;}
+#cursor-ring{position:fixed;width:32px;height:32px;border:1.5px solid rgba(224,89,36,0.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+body.hov #cursor{width:14px;height:14px;background:var(--teal);}
+body.hov #cursor-ring{width:44px;height:44px;border-color:rgba(4,217,196,0.4);}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .65s cubic-bezier(0.16,1,0.3,1),transform .65s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 52px;display:flex;align-items:center;justify-content:space-between;background:rgba(253,248,240,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(232,228,220,0.7);}
+.nav-brand{font-family:'Lora',serif;font-weight:700;font-size:22px;color:var(--ink);display:flex;align-items:center;gap:9px;cursor:none;font-style:italic;letter-spacing:-0.01em;}
+.brand-dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex-shrink:0;box-shadow:0 0 8px rgba(224,89,36,0.35);}
+.nav-links{display:flex;gap:28px;font-size:13px;color:var(--ink3);}
+.nav-links a{text-decoration:none;transition:color .15s;cursor:none;}
+.nav-links a:hover{color:var(--coral);}
+.nav-crisis{font-size:12px;font-weight:600;color:var(--coral);background:rgba(224,89,36,0.08);border:1px solid rgba(224,89,36,0.18);padding:7px 16px;border-radius:999px;cursor:none;text-decoration:none;transition:background .15s;}
+.nav-crisis:hover{background:rgba(224,89,36,0.14);}
+@media(max-width:720px){.nav-links{display:none;}.nav{padding:14px 20px;}}
+
+/* Hero — full bleed, proportionate */
+.hero{position:relative;height:90vh;min-height:560px;max-height:780px;overflow:hidden;}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(253,248,240,0.95) 0%,rgba(253,248,240,0.75) 42%,rgba(253,248,240,0.1) 100%),linear-gradient(to top,rgba(15,15,15,0.15) 0%,transparent 35%);}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 52px;max-width:620px;}
+.hero-overline{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:18px;display:flex;align-items:center;gap:9px;}
+.hero-overline::before{content:'';display:block;width:18px;height:1px;background:var(--teal);}
+.hero h1{font-family:'Lora',serif;font-weight:700;font-size:clamp(32px,4.5vw,52px);line-height:1.14;letter-spacing:-0.01em;color:var(--ink);margin-bottom:16px;}
+.hero h1 em{font-style:italic;color:var(--coral);}
+.hero-sub{font-size:14.5px;color:var(--ink2);max-width:400px;line-height:1.8;margin-bottom:28px;font-weight:300;}
+.hero-btn{display:inline-flex;align-items:center;gap:8px;background:var(--coral);color:var(--white);border:none;font-family:'Inter',sans-serif;font-weight:500;font-size:13px;padding:12px 24px;border-radius:999px;cursor:none;box-shadow:0 4px 16px rgba(224,89,36,0.28);transition:background .15s;text-decoration:none;}
+.hero-btn:hover{background:#cc4f1e;}
+.hero-btn-arrow{transition:transform .15s;}
+.hero-btn:hover .hero-btn-arrow{transform:translateX(3px);}
+.hero-note{font-size:11.5px;color:var(--ink3);margin-top:12px;font-style:italic;font-weight:300;}
+@media(max-width:720px){.hero{height:75vh;}.hero-content{padding:0 20px;max-width:100%;}.hero h1{font-size:32px;}}
+
+/* Crisis strip */
+.crisis-strip{background:linear-gradient(135deg,rgba(255,252,196,0.5),rgba(224,89,36,0.04));border-bottom:1px solid rgba(224,89,36,0.1);padding:12px 52px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.crisis-label{font-size:10.5px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--coral);white-space:nowrap;}
+.crisis-strip a{font-size:12.5px;font-weight:500;color:var(--ink2);text-decoration:none;transition:color .15s;cursor:none;}
+.crisis-strip a:hover{color:var(--coral);}
+.c-sep{color:var(--line);font-size:10px;}
+@media(max-width:720px){.crisis-strip{padding:10px 20px;}.c-sep{display:none;}}
+
+/* Chat section */
+.chat-section{background:linear-gradient(160deg,rgba(255,252,196,0.25) 0%,rgba(133,255,243,0.12) 40%,rgba(224,89,36,0.05) 100%),var(--warm);position:relative;}
+.chat-wrap{max-width:960px;margin:0 auto;padding:72px 52px;}
+@media(max-width:720px){.chat-wrap{padding:48px 20px;}}
+.chat-intro{text-align:center;max-width:520px;margin:0 auto 36px;}
+.chat-tag{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:999px;background:rgba(4,217,196,0.1);border:1px solid rgba(4,217,196,0.2);font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;}
+.tag-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:td 2.5s infinite;}
+@keyframes td{0%,100%{opacity:1;}50%{opacity:.3;}}
+.chat-intro h2{font-family:'Lora',serif;font-weight:700;font-size:clamp(22px,3vw,34px);letter-spacing:-0.01em;line-height:1.18;color:var(--ink);margin-bottom:10px;}
+.chat-intro h2 em{font-style:italic;color:var(--coral);}
+.chat-intro p{font-size:14px;color:var(--ink2);line-height:1.8;font-weight:300;}
+.cat-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+.cat-pill{padding:7px 16px;border-radius:999px;font-size:12.5px;font-weight:500;border:1px solid var(--line);background:var(--white);color:var(--ink2);cursor:none;transition:all .15s;}
+.cat-pill:hover,.cat-pill.active{background:var(--coral);color:var(--white);border-color:var(--coral);}
+.chat-window{background:rgba(255,255,255,0.92);border:1px solid rgba(232,228,220,0.6);border-radius:24px;overflow:hidden;box-shadow:0 8px 40px rgba(15,15,15,0.08),0 2px 8px rgba(15,15,15,0.04);backdrop-filter:blur(10px);}
+.chat-msgs{padding:28px 22px 16px;display:flex;flex-direction:column;gap:14px;min-height:280px;max-height:420px;overflow-y:auto;scroll-behavior:smooth;}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:rgba(4,217,196,0.2);border-radius:3px;}
+.msg{display:flex;gap:10px;align-items:flex-start;max-width:88%;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.msg-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Lora',serif;font-style:italic;flex-shrink:0;margin-top:2px;box-shadow:0 2px 8px rgba(4,217,196,0.2);}
+.msg.bot .msg-av{background:linear-gradient(135deg,var(--teal),var(--mint));color:var(--black);}
+.msg.user .msg-av{background:var(--off);color:var(--ink2);font-family:'Inter',sans-serif;font-style:normal;}
+.msg-bbl{padding:12px 16px;border-radius:18px;font-size:14.5px;line-height:1.7;color:var(--ink);}
+.msg.bot .msg-bbl{background:rgba(240,255,253,0.9);border:1px solid rgba(4,217,196,0.18);border-top-left-radius:6px;box-shadow:0 1px 4px rgba(4,217,196,0.08);}
+.msg.user .msg-bbl{background:linear-gradient(135deg,var(--coral),#d4512a);color:var(--white);border-top-right-radius:6px;box-shadow:0 2px 8px rgba(224,89,36,0.22);}
+.msg-bbl p{margin-bottom:7px;}
+.msg-bbl p:last-child{margin-bottom:0;}
+.msg-bbl strong{font-weight:600;color:var(--teal);}
+.msg.user .msg-bbl strong{color:rgba(255,255,255,0.9);}
+.typing{display:none;align-items:center;gap:10px;max-width:88%;}
+.typing.show{display:flex;}
+.typing-bbl{background:rgba(255,252,196,0.35);border:1px solid rgba(4,217,196,0.14);border-radius:14px;border-top-left-radius:4px;padding:11px 16px;display:flex;gap:5px;align-items:center;}
+.typing-bbl span{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:tb 1.2s infinite;}
+.typing-bbl span:nth-child(2){animation-delay:.18s;}
+.typing-bbl span:nth-child(3){animation-delay:.36s;}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.35;}30%{transform:translateY(-5px);opacity:1;}}
+.chat-footer{border-top:1px solid rgba(232,228,220,0.6);padding:14px 18px;background:rgba(250,250,248,0.95);}
+.quick-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.q-btn{font-size:11.5px;padding:5px 13px;border-radius:999px;border:1px solid var(--line);background:var(--white);color:var(--ink2);cursor:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.q-btn:hover{background:rgba(224,89,36,0.07);border-color:rgba(224,89,36,0.25);color:var(--coral);}
+.input-row{display:flex;gap:9px;align-items:flex-end;}
+.chat-input{flex:1;border:1.5px solid rgba(232,228,220,0.8);border-radius:999px;padding:11px 18px;font-size:14px;font-family:'Inter',sans-serif;color:var(--ink);background:var(--white);resize:none;min-height:44px;max-height:110px;outline:none;transition:border-color .15s,box-shadow .15s;line-height:1.5;cursor:none;box-shadow:0 1px 4px rgba(15,15,15,0.04);}
+.chat-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(4,217,196,0.12);}
+.send-btn{width:42px;height:42px;border-radius:50%;background:var(--coral);border:none;cursor:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 10px rgba(224,89,36,0.25);transition:background .15s;}
+.send-btn:hover{background:#cc4f1e;}
+.send-btn svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* Resources section */
+.resources-section{background:var(--white);border-top:1px solid var(--line);}
+.res-wrap{max-width:960px;margin:0 auto;padding:72px 52px;}
+@media(max-width:720px){.res-wrap{padding:48px 20px;}}
+.sec-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--coral);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-eyebrow::before{content:'';display:block;width:16px;height:1px;background:var(--coral);}
+.sec-h{font-family:'Lora',serif;font-weight:700;font-size:clamp(22px,3vw,34px);letter-spacing:-0.01em;line-height:1.12;margin-bottom:8px;color:var(--ink);}
+.sec-h em{font-style:italic;color:var(--coral);}
+.sec-d{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:44px;font-weight:300;max-width:520px;}
+
+/* Resource cards — compact, consistent */
+.resource-list{display:flex;flex-direction:column;gap:2px;}
+.res-item{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--white);transition:box-shadow .2s;}
+.res-item:hover{box-shadow:0 4px 20px rgba(15,15,15,0.07);}
+/* Collapsed header */
+.res-header{display:grid;grid-template-columns:auto 1fr auto;gap:0;align-items:stretch;cursor:none;}
+.res-img{width:120px;height:96px;object-fit:cover;display:block;flex-shrink:0;}
+@media(max-width:560px){.res-img{width:90px;height:80px;}}
+.res-header-text{padding:18px 20px;display:flex;flex-direction:column;justify-content:center;}
+.res-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;padding:3px 10px;border-radius:999px;margin-bottom:7px;width:fit-content;}
+.rt-coral{background:rgba(224,89,36,0.1);color:var(--coral);}
+.rt-teal{background:rgba(4,217,196,0.12);color:var(--teal);}
+.rt-cream{background:rgba(255,252,196,0.8);color:#7a6800;border:1px solid rgba(200,180,0,0.18);}
+.res-title{font-family:'Lora',serif;font-weight:700;font-size:16px;color:var(--ink);letter-spacing:-0.01em;margin-bottom:3px;}
+.res-summary{font-size:12.5px;color:var(--ink3);font-weight:300;line-height:1.5;}
+.res-toggle{width:52px;display:flex;align-items:center;justify-content:center;background:var(--off);border-left:1px solid var(--line);cursor:none;transition:background .15s,color .15s;flex-shrink:0;}
+.res-toggle:hover{background:rgba(224,89,36,0.06);}
+.res-toggle-icon{width:20px;height:20px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink2);font-weight:600;transition:background .2s,transform .3s;}
+.res-item.open .res-toggle-icon{background:var(--coral);color:var(--white);transform:rotate(45deg);}
+
+/* Expanded detail panel */
+.res-detail{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(0.16,1,0.3,1);}
+.res-item.open .res-detail{max-height:1200px;}
+.res-detail-inner{padding:0 24px 24px;border-top:1px solid var(--line);}
+.res-detail-intro{font-size:14px;color:var(--ink2);line-height:1.8;margin:18px 0 20px;font-weight:300;}
+.res-tip-box{background:linear-gradient(135deg,rgba(255,252,196,0.4),rgba(133,255,243,0.1));border:1px solid rgba(4,217,196,0.16);border-radius:10px;padding:16px 18px;margin-bottom:20px;}
+.res-tip-box h4{font-family:'Lora',serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px;font-style:italic;}
+.res-tip-box ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.res-tip-box ul li{font-size:13px;color:var(--ink2);line-height:1.6;font-weight:300;display:flex;align-items:flex-start;gap:8px;}
+.res-tip-box ul li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-top:7px;}
+.org-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:640px){.org-grid{grid-template-columns:1fr;}}
+.org-card{background:var(--off);border:1px solid var(--line);border-radius:10px;padding:16px;}
+.org-name{font-weight:600;font-size:13.5px;color:var(--ink);margin-bottom:4px;}
+.org-desc{font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:10px;font-weight:300;}
+.org-phone{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--coral);text-decoration:none;cursor:none;}
+.org-phone:hover{text-decoration:underline;}
+.res-ask-btn{display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-size:12.5px;font-weight:600;color:var(--white);background:var(--coral);padding:9px 20px;border-radius:999px;text-decoration:none;cursor:none;border:none;box-shadow:0 2px 10px rgba(224,89,36,0.22);transition:background .15s;}
+.res-ask-btn:hover{background:#cc4f1e;}
+
+/* Photo mosaic strip */
+.mosaic-strip{display:grid;grid-template-columns:repeat(6,1fr);height:200px;overflow:hidden;}
+@media(max-width:760px){.mosaic-strip{grid-template-columns:repeat(3,1fr);height:160px;}}
+@media(max-width:480px){.mosaic-strip{grid-template-columns:repeat(2,1fr);height:140px;}}
+.mosaic-img{overflow:hidden;}
+.mosaic-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+.mosaic-img:hover img{transform:scale(1.06);}
+
+/* About section */
+.about-section{background:var(--black);position:relative;overflow:hidden;}
+.about-grad{position:absolute;inset:0;background:radial-gradient(ellipse at 5% 50%,rgba(255,252,196,0.06) 0%,transparent 48%),radial-gradient(ellipse at 95% 25%,rgba(4,217,196,0.07) 0%,transparent 45%);pointer-events:none;}
+.about-inner{max-width:960px;margin:0 auto;padding:72px 52px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1;}
+@media(max-width:720px){.about-inner{grid-template-columns:1fr;gap:36px;padding:56px 20px;}}
+.about-overline{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.about-overline::before{content:'';display:block;width:16px;height:1px;background:var(--teal);}
+.about-h{font-family:'Lora',serif;font-weight:700;font-size:clamp(22px,3vw,34px);letter-spacing:-0.01em;line-height:1.18;color:var(--white);margin-bottom:18px;}
+.about-h em{font-style:italic;color:var(--coral);}
+.about-body p{font-size:13.5px;color:rgba(255,255,255,0.5);line-height:1.85;margin-bottom:12px;font-weight:300;}
+.about-body p:last-child{margin-bottom:0;}
+.about-note{font-size:11px;color:rgba(255,255,255,0.2);margin-top:22px;font-style:italic;line-height:1.6;}
+.about-collage{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.col-img{border-radius:12px;overflow:hidden;}
+.col-img img{width:100%;height:150px;object-fit:cover;display:block;transition:transform .4s ease;}
+.col-img:hover img{transform:scale(1.04);}
+.col-img.tall img{height:220px;}
+
+/* Footer */
+.footer-wrap{background:var(--black);border-top:1px solid rgba(255,255,255,0.05);}
+footer{max-width:960px;margin:0 auto;padding:24px 52px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-brand{font-family:'Lora',serif;font-weight:600;font-size:14px;color:var(--white);display:flex;align-items:center;gap:8px;font-style:italic;}
+.footer-text{font-size:11px;color:rgba(255,255,255,0.25);}
+.footer-note{width:100%;font-size:10.5px;color:rgba(255,255,255,0.15);font-style:italic;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05);line-height:1.6;}
+
+/* Language notice */
+.lang-notice{display:flex;align-items:flex-start;gap:12px;background:rgba(4,217,196,0.07);border:1px solid rgba(4,217,196,0.18);border-radius:12px;padding:14px 16px;margin-top:16px;text-align:left;}
+.lang-notice-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.lang-notice-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.lang-notice-sub{font-size:12px;color:var(--ink3);line-height:1.6;font-weight:300;}
+.lang-notice-sub strong{color:var(--ink2);font-weight:600;}
+.powered-line{font-size:11.5px;color:var(--ink3);margin-top:12px;font-weight:300;}
+.powered-line strong{color:var(--ink2);font-weight:600;}
+
+/* Suggest dropdown */
+.suggest-wrap{max-width:720px;margin:0 auto 20px;position:relative;}
+.suggest-toggle{width:100%;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:1px solid var(--line);background:var(--white);color:var(--ink2);cursor:none;font-family:'Inter',sans-serif;font-size:13.5px;font-weight:500;transition:all .15s;box-shadow:0 1px 4px rgba(15,15,15,0.04);}
+.suggest-toggle:hover{border-color:rgba(4,217,196,0.3);background:rgba(240,255,253,0.5);}
+.suggest-toggle.open{border-color:rgba(4,217,196,0.3);border-bottom-left-radius:0;border-bottom-right-radius:0;background:rgba(240,255,253,0.5);}
+.suggest-toggle-icon{font-size:15px;flex-shrink:0;}
+.suggest-toggle-label{flex:1;text-align:left;}
+.suggest-toggle-arrow{font-size:16px;color:var(--ink3);transition:transform .25s;}
+.suggest-toggle.open .suggest-toggle-arrow{transform:rotate(180deg);}
+.suggest-dropdown{display:none;position:relative;border:1px solid rgba(4,217,196,0.3);border-top:none;border-bottom-left-radius:12px;border-bottom-right-radius:12px;background:var(--white);overflow:hidden;box-shadow:0 4px 16px rgba(15,15,15,0.06);}
+.suggest-dropdown.open{display:block;}
+.suggest-item{width:100%;display:flex;align-items:center;gap:10px;padding:12px 18px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--ink2);cursor:none;font-family:'Inter',sans-serif;font-size:13.5px;font-weight:400;text-align:left;transition:background .12s;}
+.suggest-item:last-child{border-bottom:none;}
+.suggest-item:hover{background:rgba(240,255,253,0.6);color:var(--ink);}
+.si-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+</style>
 </head>
 <body>
 
-<!-- ── Header ── -->
-<header>
-  <div class="header-inner">
-    <span class="header-badge">NYC Newcomer Resource Guide</span>
-    <h1 class="header-title">Find help in New York City</h1>
-    <p class="header-subtitle">
-      Ask in plain language — housing, food, legal aid, English classes,
-      healthcare. Real organizations. Real addresses. Available to everyone,
-      regardless of documentation status.
-    </p>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand"><div class="brand-dot"></div>NYC Resource Guide</div>
+  <div class="nav-links">
+    <a href="#chat">Find Help</a>
+    <a href="#resources">Resources</a>
+    <a href="#about">About</a>
   </div>
-  <div class="category-bar">
-    <div class="category-bar-inner">
-      <button class="cat-pill" onclick="sendQuick('I need emergency housing or shelter')">🏠 Housing</button>
-      <button class="cat-pill" onclick="sendQuick('Where can I find free food near me?')">🍽️ Food</button>
-      <button class="cat-pill" onclick="sendQuick('I need help with my immigration case or asylum')">⚖️ Legal Aid</button>
-      <button class="cat-pill" onclick="sendQuick('Where can I learn English for free?')">📚 English Classes</button>
-      <button class="cat-pill" onclick="sendQuick('I need healthcare or mental health support')">❤️ Healthcare</button>
+  <a class="nav-crisis" href="tel:911">Emergency: 911</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero" style="margin-top:62px;">
+  <img class="hero-img" src="https://images.unsplash.com/photo-1609253932702-796cbf3d3171?q=80&w=1740&auto=format&fit=crop" alt="Welcoming community"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-overline reveal">Free resources for newcomers</div>
+    <h1 class="reveal rd1">You arrived.<br><em>Help is here.</em></h1>
+    <p class="hero-sub reveal rd2">Housing, food, legal aid, English classes, and healthcare — for everyone in New York City, regardless of documentation status.</p>
+    <a class="hero-btn reveal rd3" href="#chat">Find resources now <span class="hero-btn-arrow">&#8594;</span></a>
+    <p class="hero-note reveal rd3">All services listed are free. No documentation required.</p>
+  </div>
+</div>
+
+<!-- CRISIS STRIP -->
+<div class="crisis-strip">
+  <span class="crisis-label">If you are in danger</span>
+  <a href="tel:911">911 — Emergency</a><span class="c-sep">/</span>
+  <a href="tel:311">311 — Shelter, 24/7</a><span class="c-sep">/</span>
+  <a href="tel:+12125777700">Safe Horizon — (212) 577-7700</a><span class="c-sep">/</span>
+  <a href="tel:988">Mental Health — 988</a>
+</div>
+
+<!-- CHAT -->
+<section class="chat-section" id="chat">
+  <div class="chat-wrap">
+    <div class="chat-intro reveal">
+      <div class="chat-tag"><span class="tag-dot"></span>Ask anything</div>
+      <h2>What do you need <em>today?</em></h2>
+      <p>Type your question in plain language. No forms. No judgment. All services are free and available regardless of immigration or documentation status.</p>
+      <div class="lang-notice">
+        <div class="lang-notice-icon">&#127760;</div>
+        <div>
+          <div class="lang-notice-title">You can type in your own language</div>
+          <div class="lang-notice-sub">This chat is powered by Anthropic Claude and responds in your language. Supported: <strong>English, Spanish, French, Arabic, Haitian Creole, Lao,</strong> and many more.</div>
+        </div>
+      </div>
+      <div class="powered-line">Powered by <strong>Anthropic Claude</strong> — multilingual AI assistant</div>
     </div>
-  </div>
-</header>
-
-<!-- ── Main ── -->
-<main class="main">
-
-  <!-- Crisis banner -->
-  <div class="crisis-banner">
-    <div class="crisis-icon">🚨</div>
-    <div class="crisis-content">
-      <div class="crisis-title">If you are in immediate danger</div>
-      <div class="crisis-text">
-        Call <a href="tel:911">911</a> for emergencies &nbsp;·&nbsp;
-        <a href="tel:311">311</a> for shelter &nbsp;·&nbsp;
-        Safe Horizon 24/7 hotline: <a href="tel:+12125777700">(212) 577-7700</a>
-        &nbsp;·&nbsp; NYC services are available regardless of immigration status.
+    <div class="suggest-wrap reveal rd1">
+      <button class="suggest-toggle" onclick="toggleSuggest(this)" aria-expanded="false">
+        <span class="suggest-toggle-icon">&#9997;</span>
+        <span class="suggest-toggle-label">Not sure what to ask? Tap for suggestions</span>
+        <span class="suggest-toggle-arrow">&#8964;</span>
+      </button>
+      <div class="suggest-dropdown" id="suggestDropdown">
+        <button class="suggest-item" onclick="pickSuggest('I need emergency housing or shelter tonight')">
+          <span class="si-dot" style="background:var(--coral)"></span>I need housing or shelter tonight
+        </button>
+        <button class="suggest-item" onclick="pickSuggest('Where can I find free food near me?')">
+          <span class="si-dot" style="background:var(--teal)"></span>Where can I find free food near me?
+        </button>
+        <button class="suggest-item" onclick="pickSuggest('I need help with my immigration case or asylum application')">
+          <span class="si-dot" style="background:var(--coral)"></span>I need help with my immigration case
+        </button>
+        <button class="suggest-item" onclick="pickSuggest('Where can I learn English for free?')">
+          <span class="si-dot" style="background:var(--teal)"></span>Where can I learn English for free?
+        </button>
+        <button class="suggest-item" onclick="pickSuggest('I need healthcare or mental health support')">
+          <span class="si-dot" style="background:var(--coral)"></span>I need healthcare or mental health support
+        </button>
+        <button class="suggest-item" onclick="pickSuggest('I don't have papers — can I still get help?')">
+          <span class="si-dot" style="background:var(--teal)"></span>I don't have papers — can I still get help?
+        </button>
+        <button class="suggest-item" onclick="pickSuggest('I just arrived in New York and don't know where to start')">
+          <span class="si-dot" style="background:var(--coral)"></span>I just arrived and don't know where to start
+        </button>
+      </div>
+    </div>
+    <div class="chat-window reveal rd2">
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="msg bot">
+          <div class="msg-av">N</div>
+          <div class="msg-bbl">
+            <p>Hello and welcome.</p>
+            <p>I am here to help you find free support in New York City — <strong>housing, food, legal aid, English classes, and healthcare.</strong></p>
+            <p>Everything here is free. You are safe. What do you need help with today?</p>
+          </div>
+        </div>
+      </div>
+      <div class="typing" id="typingEl">
+        <div class="msg-av" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--mint));color:var(--black);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Lora',serif;font-style:italic;flex-shrink:0;">N</div>
+        <div class="typing-bbl"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-footer">
+        <div class="quick-row">
+          <button class="q-btn" onclick="sendQ('I don\'t have papers — can I still get help?')">No documentation?</button>
+          <button class="q-btn" onclick="sendQ('I just arrived in New York and don\'t know where to start')">Just arrived?</button>
+          <button class="q-btn" onclick="sendQ('I need help for my children')">Help for children</button>
+          <button class="q-btn" onclick="sendQ('I am scared and I need support')">Need support</button>
+        </div>
+        <div class="input-row">
+          <textarea id="chatInput" class="chat-input" placeholder="Type your question here..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMsg()">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Chat window -->
-  <div class="chat-card">
-    <div class="chat-messages" id="chatMessages">
+<!-- RESOURCES -->
+<section class="resources-section" id="resources">
+  <div class="res-wrap">
+    <div class="sec-eyebrow reveal">Find what you need</div>
+    <h2 class="sec-h reveal rd1">Resources available <em>to everyone.</em></h2>
+    <p class="sec-d reveal rd2">Real organizations. Real addresses. Click any category to read more and find specific contacts.</p>
 
-      <!-- Opening bot message -->
-      <div class="msg bot">
-        <div class="msg-avatar">NYC</div>
-        <div class="msg-bubble">
-          <p>Hello and welcome. 👋</p>
-          <p>I'm here to help you find support in New York City. You can ask me about <strong>housing, food, legal help, English classes, or healthcare</strong> — in plain language, no forms needed.</p>
-          <p>All services I share are free or low-cost, and available regardless of immigration status. <strong>You are not alone.</strong> What do you need help with today?</p>
+    <div class="resource-list">
+
+      <!-- Housing -->
+      <div class="res-item reveal" id="res-housing">
+        <div class="res-header" onclick="toggleRes('housing')">
+          <img class="res-img" src="https://images.unsplash.com/photo-1596510914965-9ae08acae566?q=80&w=400&auto=format&fit=crop" alt="Housing"/>
+          <div class="res-header-text">
+            <div class="res-tag rt-coral">Housing and Shelter</div>
+            <div class="res-title">A safe place to sleep tonight.</div>
+            <div class="res-summary">Emergency shelter available 24/7, regardless of documentation status.</div>
+          </div>
+          <button class="res-toggle" aria-label="Expand"><div class="res-toggle-icon">+</div></button>
+        </div>
+        <div class="res-detail">
+          <div class="res-detail-inner">
+            <p class="res-detail-intro">Emergency shelter is available to anyone in New York City — no ID, no papers, no prior address needed. Call 311 at any hour and say "shelter." Families with children are given priority and kept together.</p>
+            <div class="res-tip-box">
+              <h4>What to know</h4>
+              <ul>
+                <li>Call 311 any time, 24 hours a day, 7 days a week — say "shelter"</li>
+                <li>No documentation required at any city shelter</li>
+                <li>If you have an IRC case number, contact them first for faster placement</li>
+                <li>Families are always kept together and given priority</li>
+              </ul>
+            </div>
+            <div class="org-grid">
+              <div class="org-card">
+                <div class="org-name">IRC New York</div>
+                <div class="org-desc">Primary resettlement agency for refugees. Housing placement, case management, all services.</div>
+                <a href="tel:+12125513000" class="org-phone">&#9742; (212) 551-3000</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">BronxWorks Emergency Shelter</div>
+                <div class="org-desc">Walk-ins accepted 24 hours. Adults and families. 60 East Tremont Ave, Bronx.</div>
+                <a href="tel:+17187311114" class="org-phone">&#9742; (718) 731-3114</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">CAMBA Housing (Brooklyn)</div>
+                <div class="org-desc">Affordable housing and emergency shelter. Multilingual staff. 2138 Nostrand Ave.</div>
+                <a href="tel:+17182876200" class="org-phone">&#9742; (718) 287-6200</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">NYC Dept of Homeless Services</div>
+                <div class="org-desc">City emergency shelter for anyone. No status required. Available 365 days a year.</div>
+                <a href="tel:311" class="org-phone">&#9742; Call 311</a>
+              </div>
+            </div>
+            <button class="res-ask-btn" onclick="sendQ('I need emergency housing or shelter tonight');document.getElementById('chat').scrollIntoView({behavior:'smooth'})">Ask the guide for shelter near you &#8594;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Food -->
+      <div class="res-item reveal rd1" id="res-food">
+        <div class="res-header" onclick="toggleRes('food')">
+          <img class="res-img" src="https://images.unsplash.com/photo-1643321610692-719deb378a33?q=80&w=400&auto=format&fit=crop" alt="Food"/>
+          <div class="res-header-text">
+            <div class="res-tag rt-teal">Food and Basic Needs</div>
+            <div class="res-title">Free food for your family.</div>
+            <div class="res-summary">400+ food pantries and meal programs across all five boroughs. No docs needed.</div>
+          </div>
+          <button class="res-toggle" aria-label="Expand"><div class="res-toggle-icon">+</div></button>
+        </div>
+        <div class="res-detail">
+          <div class="res-detail-inner">
+            <p class="res-detail-intro">Over 400 free food pantries operate across New York City. Most require no documentation. Search cityharvest.org by zip code to find the nearest pantry that is open right now.</p>
+            <div class="res-tip-box">
+              <h4>What to know</h4>
+              <ul>
+                <li>Most pantries require no documentation, ID, or proof of address</li>
+                <li>Search cityharvest.org by zip code to find hours and location near you</li>
+                <li>Many pantries also provide baby supplies, feminine products, and household essentials</li>
+                <li>SNAP (food stamps) may be available — ask a caseworker if you may qualify</li>
+              </ul>
+            </div>
+            <div class="org-grid">
+              <div class="org-card">
+                <div class="org-name">City Harvest</div>
+                <div class="org-desc">400+ pantries citywide. Use cityharvest.org/find-food to search by zip code.</div>
+                <a href="tel:+16464126000" class="org-phone">&#9742; (646) 412-0600</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Food Bank NYC</div>
+                <div class="org-desc">Free food distribution and SNAP enrollment help. foodbanknyc.org</div>
+                <a href="tel:+12125668550" class="org-phone">&#9742; (212) 566-8550</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">St. Francis of Assisi Pantry</div>
+                <div class="org-desc">135 West 31st St, Manhattan. No docs required. No appointment needed.</div>
+                <a href="tel:+12127368500" class="org-phone">&#9742; (212) 736-8500</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">IRC Economic Empowerment</div>
+                <div class="org-desc">Starter kits with food and household essentials for active IRC clients.</div>
+                <a href="tel:+12125513000" class="org-phone">&#9742; (212) 551-3000</a>
+              </div>
+            </div>
+            <button class="res-ask-btn" onclick="sendQ('Where can I find free food near me?');document.getElementById('chat').scrollIntoView({behavior:'smooth'})">Ask the guide for food near you &#8594;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div class="res-item reveal rd2" id="res-legal">
+        <div class="res-header" onclick="toggleRes('legal')">
+          <img class="res-img" src="https://images.unsplash.com/photo-1678681438108-252df5ddacd1?q=80&w=400&auto=format&fit=crop" alt="Legal aid"/>
+          <div class="res-header-text">
+            <div class="res-tag rt-coral">Legal Aid and Immigration</div>
+            <div class="res-title">Free legal help for your case.</div>
+            <div class="res-summary">Asylum, green cards, DACA, citizenship — free regardless of your status.</div>
+          </div>
+          <button class="res-toggle" aria-label="Expand"><div class="res-toggle-icon">+</div></button>
+        </div>
+        <div class="res-detail">
+          <div class="res-detail-inner">
+            <p class="res-detail-intro">You have rights in New York City regardless of your immigration status. Free legal services are available for asylum, green cards, DACA, citizenship, and deportation defense. You will not be reported to immigration authorities for seeking legal help.</p>
+            <div class="res-tip-box">
+              <h4>Know your rights</h4>
+              <ul>
+                <li>You have the right to remain silent with immigration officers</li>
+                <li>Never sign anything you do not understand — ask for a translator first</li>
+                <li>All organizations below are confidential — they will not report you</li>
+                <li>If you are unsure where to start, call NYIC at (212) 627-2227 for a referral</li>
+              </ul>
+            </div>
+            <div class="org-grid">
+              <div class="org-card">
+                <div class="org-name">IRC Legal Program</div>
+                <div class="org-desc">Free asylum, green cards, citizenship, DACA for eligible refugees and immigrants.</div>
+                <a href="tel:+12125513000" class="org-phone">&#9742; (212) 551-3000</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Legal Aid Society</div>
+                <div class="org-desc">Free immigration legal help citywide. No documentation barrier. legalaidnyc.org</div>
+                <a href="tel:+12125773300" class="org-phone">&#9742; (212) 577-3300</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">CUNY Citizenship Now!</div>
+                <div class="org-desc">Always free. Walk-in clinics at multiple NYC locations. cuny.edu/citizenshipnow</div>
+                <a href="tel:+16466649400" class="org-phone">&#9742; (646) 664-9400</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Her Justice</div>
+                <div class="org-desc">Free legal help for immigrant women. Family law, immigration, benefits. Multilingual.</div>
+                <a href="tel:+12126951666" class="org-phone">&#9742; (212) 695-1666</a>
+              </div>
+            </div>
+            <button class="res-ask-btn" onclick="sendQ('I need help with my immigration case or asylum application');document.getElementById('chat').scrollIntoView({behavior:'smooth'})">Ask the guide about legal help &#8594;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESL -->
+      <div class="res-item reveal" id="res-esl">
+        <div class="res-header" onclick="toggleRes('esl')">
+          <img class="res-img" src="https://images.unsplash.com/photo-1580752300928-6e1d4ed200c0?q=80&w=400&auto=format&fit=crop" alt="ESL classes"/>
+          <div class="res-header-text">
+            <div class="res-tag rt-teal">English Classes and Education</div>
+            <div class="res-title">Learn English for free.</div>
+            <div class="res-summary">Classes at every level across all five boroughs. No tuition or registration fee.</div>
+          </div>
+          <button class="res-toggle" aria-label="Expand"><div class="res-toggle-icon">+</div></button>
+        </div>
+        <div class="res-detail">
+          <div class="res-detail-inner">
+            <p class="res-detail-intro">Free English classes are available at public libraries, community colleges, and nonprofits across all five boroughs. No tuition, no application fee, no prior education requirement. Many offer evening and weekend schedules for people who work.</p>
+            <div class="res-tip-box">
+              <h4>Getting started</h4>
+              <ul>
+                <li>NYC Public Library ESL classes require no registration fee — many branches let you walk in and start</li>
+                <li>Tell the program your current English level — most have beginner, intermediate, and advanced tracks</li>
+                <li>Many programs also offer GED and high school equivalency preparation</li>
+                <li>Some programs offer childcare during class — ask when you call</li>
+              </ul>
+            </div>
+            <div class="org-grid">
+              <div class="org-card">
+                <div class="org-name">NYC Public Library</div>
+                <div class="org-desc">Free ESL at 80+ branches. Walk-ins welcome at many locations. nypl.org</div>
+                <a href="tel:+19178590100" class="org-phone">&#9742; (917) 859-0100</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">CUNY Adult Literacy</div>
+                <div class="org-desc">Free ESL at all levels at CUNY campuses citywide. literacy.cuny.edu</div>
+                <a href="tel:+12129982400" class="org-phone">&#9742; (212) 998-2400</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Make the Road New York</div>
+                <div class="org-desc">ESL, GED, legal services, youth programs. Brooklyn, Queens, Staten Island, Long Island.</div>
+                <a href="tel:+17184187690" class="org-phone">&#9742; (718) 418-7690</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Literacy Partners</div>
+                <div class="org-desc">Free ESL and GED prep. Parent and family literacy programs available.</div>
+                <a href="tel:+12127259200" class="org-phone">&#9742; (212) 725-9200</a>
+              </div>
+            </div>
+            <button class="res-ask-btn" onclick="sendQ('Where can I learn English for free?');document.getElementById('chat').scrollIntoView({behavior:'smooth'})">Ask the guide for classes near you &#8594;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Healthcare -->
+      <div class="res-item reveal rd1" id="res-health">
+        <div class="res-header" onclick="toggleRes('health')">
+          <img class="res-img" src="https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=400&auto=format&fit=crop" alt="Healthcare"/>
+          <div class="res-header-text">
+            <div class="res-tag rt-coral">Healthcare and Mental Health</div>
+            <div class="res-title">Care for your body and mind.</div>
+            <div class="res-summary">Full medical care regardless of status. Mental health support available 24/7.</div>
+          </div>
+          <button class="res-toggle" aria-label="Expand"><div class="res-toggle-icon">+</div></button>
+        </div>
+        <div class="res-detail">
+          <div class="res-detail-inner">
+            <p class="res-detail-intro">NYC Health + Hospitals serves everyone regardless of immigration status or ability to pay. You will not be reported to immigration authorities for seeking care. Mental health support is available 24 hours a day in multiple languages.</p>
+            <div class="res-tip-box">
+              <h4>What to know</h4>
+              <ul>
+                <li>NYC Health + Hospitals treats everyone — payment is based on income, many pay nothing</li>
+                <li>Safe Horizon is available 24/7 in multiple languages for crisis support</li>
+                <li>Calling or texting 988 connects you to free mental health support any hour</li>
+                <li>All services listed are confidential — your status will not be shared</li>
+              </ul>
+            </div>
+            <div class="org-grid">
+              <div class="org-card">
+                <div class="org-name">NYC Health + Hospitals</div>
+                <div class="org-desc">Full care, no status required. Income-based payment — many pay nothing. Call 311.</div>
+                <a href="tel:311" class="org-phone">&#9742; Call 311</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Bellevue Survivor Program</div>
+                <div class="org-desc">Specialized trauma care for survivors of torture and persecution. 462 First Ave, Manhattan.</div>
+                <a href="tel:+12125628679" class="org-phone">&#9742; (212) 562-8679</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Safe Horizon — 24/7 Hotline</div>
+                <div class="org-desc">Crisis counseling and mental health support. Multilingual. Any hour, any day.</div>
+                <a href="tel:+12125777700" class="org-phone">&#9742; (212) 577-7700</a>
+              </div>
+              <div class="org-card">
+                <div class="org-name">Mental Health Crisis Line</div>
+                <div class="org-desc">Free, confidential mental health support 24/7. Call or text. No docs required.</div>
+                <a href="tel:988" class="org-phone">&#9742; Call or text 988</a>
+              </div>
+            </div>
+            <button class="res-ask-btn" onclick="sendQ('I need healthcare or mental health support');document.getElementById('chat').scrollIntoView({behavior:'smooth'})">Ask the guide about healthcare &#8594;</button>
+          </div>
         </div>
       </div>
 
     </div>
+  </div>
+</section>
 
-    <!-- Typing indicator -->
-    <div class="typing-indicator" id="typingIndicator">
-      <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--teal-deep);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;font-family:'Lora',serif;flex-shrink:0;">NYC</div>
-      <div class="typing-dots">
-        <span></span><span></span><span></span>
+<!-- PHOTO MOSAIC STRIP -->
+<div class="mosaic-strip">
+  <div class="mosaic-img"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" alt="Hope"/></div>
+  <div class="mosaic-img"><img src="https://images.unsplash.com/photo-1772724318003-16a9b0b848ef?q=80&w=400&auto=format&fit=crop" alt="Food"/></div>
+  <div class="mosaic-img"><img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=600&auto=format&fit=crop" alt="Family"/></div>
+  <div class="mosaic-img"><img src="https://images.unsplash.com/photo-1579113800032-c38bd7635818?q=80&w=400&auto=format&fit=crop" alt="Food and community"/></div>
+  <div class="mosaic-img"><img src="https://images.unsplash.com/photo-1758525861586-1c8c8e424dc8?q=80&w=600&auto=format&fit=crop" alt="Community"/></div>
+  <div class="mosaic-img"><img src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?q=80&w=600&auto=format&fit=crop" alt="Peace"/></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-grad"></div>
+  <div class="about-inner">
+    <div class="reveal">
+      <div class="about-overline">Why this exists</div>
+      <h2 class="about-h">Built for everyone who arrives <em>without a guide.</em></h2>
+      <div class="about-body">
+        <p>My mother's family came to this country as refugees from Laos. By elementary school she was already translating legal documents for my grandparents — navigating systems she barely understood, in a language she was still learning, without anyone to show her where to go.</p>
+        <p>This tool is what I wish had existed for her. Available 24 hours a day, asking nothing from you, connecting you to real organizations with real addresses and real phone numbers. You do not need papers to use it. You do not need to explain yourself.</p>
+        <p>Nothing you type is stored. Nothing is shared. This is a safe space to find help.</p>
+      </div>
+      <p class="about-note">An independent AI project built by Sumalee Simmonds. Inspired by — not affiliated with — the International Rescue Committee or any other organization. Powered by Anthropic's Claude API.</p>
+    </div>
+    <div class="about-collage reveal rd1">
+      <div class="col-img tall"><img src="https://images.unsplash.com/photo-1631499545782-7d09b3a7dcf7?q=80&w=400&auto=format&fit=crop" alt="Healthcare"/></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="col-img"><img src="https://images.unsplash.com/photo-1758270704080-e3556e6794a7?q=80&w=400&auto=format&fit=crop" alt="Support"/></div>
+        <div class="col-img"><img src="https://images.unsplash.com/photo-1543109740-4bdb38fda756?q=80&w=400&auto=format&fit=crop" alt="NYC"/></div>
       </div>
     </div>
-
-    <!-- Input area -->
-    <div class="chat-input-area">
-      <div class="quick-prompts">
-        <button class="quick-btn" onclick="sendQuick('I don\'t have papers — can I still get help?')">No documentation?</button>
-        <button class="quick-btn" onclick="sendQuick('I just arrived in New York and don\'t know where to start')">Just arrived?</button>
-        <button class="quick-btn" onclick="sendQuick('I need help for my children')">Help for children</button>
-        <button class="quick-btn" onclick="sendQuick('I am scared and need someone to talk to')">Need support</button>
-      </div>
-      <div class="input-row">
-        <textarea
-          id="chatInput"
-          class="chat-input"
-          placeholder="Type your question here..."
-          rows="1"
-          onkeydown="handleKey(event)"
-          oninput="autoResize(this)"
-        ></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
   </div>
+</section>
 
-  <!-- About cards -->
-  <div class="about-grid">
-    <div class="about-card">
-      <div class="about-icon">🌍</div>
-      <div class="about-title">Built for newcomers</div>
-      <div class="about-desc">Designed for refugees, immigrants, and anyone navigating New York City for the first time.</div>
-    </div>
-    <div class="about-card">
-      <div class="about-icon">🔒</div>
-      <div class="about-title">Your privacy</div>
-      <div class="about-desc">We never ask for your name, address, or status. Nothing you type is stored or shared.</div>
-    </div>
-    <div class="about-card">
-      <div class="about-icon">📞</div>
-      <div class="about-title">Real organizations</div>
-      <div class="about-desc">Every resource shared is a real NYC organization with a real phone number you can call.</div>
-    </div>
-    <div class="about-card">
-      <div class="about-icon">🤝</div>
-      <div class="about-title">Inspired by IRC</div>
-      <div class="about-desc">Built in alignment with the International Rescue Committee's mission to help people rebuild their lives.</div>
-    </div>
-  </div>
-
-</main>
-
-<!-- ── Footer ── -->
-<footer>
-  <div class="footer-text">
-    Built by <strong style="color:#fff">Sumalee Simmonds</strong> using the Anthropic Claude API &nbsp;·&nbsp;
-    Inspired by the mission of the <a href="https://www.rescue.org" target="_blank">International Rescue Committee</a><br>
-    Resources cover New York City. For emergencies call 911. For shelter call 311.
-  </div>
-  <div class="footer-dedication">
-    Dedicated to everyone who has arrived somewhere new with nothing but hope.
-  </div>
-</footer>
+<!-- FOOTER -->
+<div class="footer-wrap">
+  <footer>
+    <div class="footer-brand"><div class="brand-dot" style="width:7px;height:7px;border-radius:50%;background:var(--coral);"></div>NYC Resource Guide</div>
+    <p class="footer-text">Built by Sumalee Simmonds &nbsp;&middot;&nbsp; Powered by Anthropic Claude API</p>
+    <p class="footer-note">An independent AI project. Inspired by — not affiliated with — the International Rescue Committee or any other organization. For emergencies call 911. For shelter call 311. Safe Horizon 24/7: (212) 577-7700.</p>
+  </footer>
+</div>
 
 <script>
-  // ── Resource database (mirrors chatbot.py) ──────────────────────────────────
-  const RESOURCES = `
-=== NEW YORK CITY REFUGEE & IMMIGRANT RESOURCE DIRECTORY ===
+// Cursor
+const cur=document.getElementById('cursor');
+const ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*0.13;ry+=(my-ry)*0.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('button,a,.res-item,.mosaic-img,.col-img').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
 
-HOUSING & EMERGENCY SHELTER:
-1. IRC New York — 1440 Broadway Suite 300 — (212) 551-3000 — rescue.org — Primary resettlement agency for refugees with a case number. Free case management and housing placement.
-2. BronxWorks Emergency Shelter — 60 East Tremont Ave, Bronx — (718) 731-3114 — bronxworks.org — Walk-ins accepted. Serves adults and families.
-3. CAMBA Housing — 2138 Nostrand Ave, Brooklyn — (718) 287-2600 — camba.org — Multilingual staff. Affordable housing for immigrants and refugees.
-4. NYC Department of Homeless Services (DHS) — Call 311 — nyc.gov/dhs — Available 24/7. Anyone can access regardless of immigration status.
+// Scroll reveal
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-FOOD & BASIC NEEDS:
-5. City Harvest — (646) 412-0600 — cityharvest.org/find-food — 400+ food pantries across NYC. Use website to find nearest by zip code.
-6. Food Bank for New York City — (212) 566-7855 — foodbanknyc.org — Free food pantries. SNAP enrollment help.
-7. St. Francis of Assisi Food Pantry — 135 West 31st St, Manhattan — (212) 736-8500 — No documentation required. No appointment needed.
-8. IRC New York Economic Empowerment — (212) 551-3000 — Starter kits and basic needs support for active IRC clients.
+// Accordion toggle
+function toggleRes(id){
+  const item=document.getElementById('res-'+id);
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.res-item.open').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
 
-LEGAL AID & IMMIGRATION:
-9. IRC New York Legal Program — 1440 Broadway Suite 300 — (212) 551-3000 — rescue.org — Free legal services for eligible refugees. Asylum, green cards, citizenship.
-10. Legal Aid Society — (212) 577-3300 — legalaidnyc.org — Free civil and immigration legal help. No documentation barrier.
-11. CUNY Citizenship Now! — (646) 664-9400 — cuny.edu/citizenshipnow — Completely free. Citizenship, green cards, DACA, asylum. Walk-in clinics available.
-12. New York Immigration Coalition — (212) 627-2227 — nyic.org — Know Your Rights info and referrals to immigration lawyers.
-13. Her Justice — (212) 695-1666 — herjustice.org — Free legal help for immigrant women. Multilingual.
-
-ESL CLASSES & EDUCATION:
-14. IRC New York Education Program — (212) 551-3000 — Free ESL classes for IRC clients. Multiple languages.
-15. New York Public Library ESL Classes — nypl.org — Free English classes at branches across all five boroughs. No registration required at many branches.
-16. CUNY Adult Literacy/ESL — (212) 998-2400 — literacy.cuny.edu — Free ESL classes at multiple levels. Open to all adults.
-17. Literacy Partners — (212) 725-9200 — literacypartners.org — Free ESL and GED prep.
-18. Make the Road New York — (718) 418-7690 — maketheroadny.org — ESL, legal services, youth education. Brooklyn, Queens, Staten Island, Long Island.
-
-HEALTHCARE & MENTAL HEALTH:
-19. NYC Health + Hospitals — Call 311 — nychealthandhospitals.org — Full medical care regardless of immigration status or ability to pay.
-20. Bellevue Hospital Survivor's of Torture Program — 462 First Ave, Manhattan — (212) 562-8679 — Trauma-informed care for survivors. Free for eligible patients.
-21. Safe Horizon — (212) 577-7700 (24-hour hotline) — safehorizon.org — Crisis support, mental health, multilingual. Available 24/7.
-22. Vibrant Emotional Health — Call 988 — vibrant.org — Free, confidential, 24/7 mental health crisis support. Multiple languages.
-23. Charles B. Wang Community Health Center — (212) 379-6900 — cbwchc.org — Affordable healthcare. Multilingual staff. Manhattan and Flushing Queens.
-24. IRC New York Health Program — (212) 551-3000 — Health screenings and mental health referrals for refugees.
-`;
-
-  // ── Conversation history ─────────────────────────────────────────────────────
-  const history = [
-    {
-      role: "user",
-      content: "Hello, I just arrived and need help."
-    },
-    {
-      role: "assistant",
-      content: "Hello and welcome. I'm here to help you find support in New York City. You can ask me about housing, food, legal help, English classes, or healthcare — in plain language, no forms needed. All services are free or low-cost and available regardless of immigration status. You are not alone. What do you need help with today?"
-    }
-  ];
-
-  const SYSTEM = `You are a compassionate, knowledgeable resource guide helping newly arrived
-refugees and immigrants in New York City find the services they need.
-
-You were built by Sumalee Simmonds in alignment with the mission of the
-International Rescue Committee (IRC) — to help people affected by humanitarian
-crises survive, recover, and rebuild their lives.
-
-YOUR TONE:
-- Warm, patient, and welcoming — many users have been through trauma
-- Simple, clear language — avoid jargon
-- Never make people feel judged
-- Always remind users that help exists and they are not alone
-
-YOUR RULES:
-- Only recommend organizations from the resource directory below
-- Always include the phone number and address when recommending a place
-- If someone seems to be in crisis or danger, always give 311 and Safe Horizon hotline first
-- If asked about something not in your directory, suggest they call 311 or visit IRC
-- Never ask for or store any personal information
-- Remind users that NYC services are available regardless of documentation status when relevant
-- Keep responses focused — use short paragraphs
-
-RESOURCE DIRECTORY:
-${RESOURCES}`;
-
-  // ── DOM helpers ──────────────────────────────────────────────────────────────
-  const messagesEl   = document.getElementById('chatMessages');
-  const inputEl      = document.getElementById('chatInput');
-  const sendBtnEl    = document.getElementById('sendBtn');
-  const typingEl     = document.getElementById('typingIndicator');
-
-  function scrollToBottom() {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  }
-
-  function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  }
-
-  function appendMessage(role, html) {
-    const isUser   = role === 'user';
-    const wrapper  = document.createElement('div');
-    wrapper.className = `msg ${isUser ? 'user' : 'bot'}`;
-
-    const avatar   = document.createElement('div');
-    avatar.className = 'msg-avatar';
-    avatar.textContent = isUser ? '👤' : 'NYC';
-
-    const bubble   = document.createElement('div');
-    bubble.className = 'msg-bubble';
-    bubble.innerHTML = html;
-
-    wrapper.appendChild(avatar);
-    wrapper.appendChild(bubble);
-    messagesEl.insertBefore(wrapper, typingEl);
-    scrollToBottom();
-    return bubble;
-  }
-
-  function showTyping() {
-    typingEl.classList.add('visible');
-    scrollToBottom();
-  }
-
-  function hideTyping() {
-    typingEl.classList.remove('visible');
-  }
-
-  // ── Format bot response ───────────────────────────────────────────────────
-  function formatResponse(text) {
-    // Convert **bold** to <strong>
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    // Convert line breaks to paragraphs
-    const paras = text.split(/\n\n+/).filter(p => p.trim());
-    return paras.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
-  }
-
-  // ── Send message ─────────────────────────────────────────────────────────────
-  async function sendMessage() {
-    const text = inputEl.value.trim();
-    if (!text) return;
-
-    // Add to UI
-    appendMessage('user', `<p>${text.replace(/</g, '&lt;')}</p>`);
-    inputEl.value = '';
-    inputEl.style.height = 'auto';
-    sendBtnEl.disabled = true;
-    showTyping();
-
-    // Add to history
-    history.push({ role: 'user', content: text });
-
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 600,
-          system: SYSTEM,
-          messages: history
-        })
-      });
-
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || "I'm sorry — something went wrong. Please call 311 for immediate help finding resources.";
-
-      history.push({ role: 'assistant', content: reply });
-      hideTyping();
-      appendMessage('bot', formatResponse(reply));
-
-    } catch (err) {
-      hideTyping();
-      appendMessage('bot', '<p>I\'m having trouble connecting right now. For immediate help, please call <strong>311</strong> or Safe Horizon at <strong>(212) 577-7700</strong>.</p>');
-    }
-
-    sendBtnEl.disabled = false;
-    inputEl.focus();
-  }
-
-  function sendQuick(text) {
-    inputEl.value = text;
-    sendMessage();
-  }
-
-  // Focus input on load
-  inputEl.focus();
+// Chat
+const RESOURCES=`NYC RESOURCES:
+HOUSING: IRC New York 1440 Broadway Suite 300 (212)551-3000 rescue.org | BronxWorks 60 East Tremont Ave Bronx (718)731-3114 walk-ins 24hr | CAMBA 2138 Nostrand Ave Brooklyn (718)287-6200 multilingual | NYC DHS call 311 24/7 no docs needed
+FOOD: City Harvest (646)412-0600 cityharvest.org 400+ pantries search by zip | Food Bank NYC (212)566-8550 foodbanknyc.org SNAP help | St Francis Pantry 135 West 31st St Manhattan (212)736-8500 no docs no appointment
+LEGAL: IRC Legal (212)551-3000 asylum green cards citizenship DACA | Legal Aid Society (212)577-3300 legalaidnyc.org | CUNY Citizenship Now (646)664-9400 free walk-in clinics | Her Justice (212)695-1666 immigrant women | NYIC (212)627-2227 nyic.org referrals
+ESL: NYC Public Library nypl.org free 80+ branches walk-ins welcome | CUNY Literacy (212)998-2400 literacy.cuny.edu all levels | Make the Road NY (718)418-7690 Brooklyn Queens Staten Island | Literacy Partners (212)725-9200 family literacy
+HEALTHCARE: NYC Health+Hospitals call 311 full care no status income-based | Bellevue Survivor Program 462 First Ave (212)562-8679 trauma care | Safe Horizon 24hr (212)577-7700 multilingual crisis | Mental Health 988 free 24/7`;
+const SYS=`You are a warm compassionate resource guide helping refugees and immigrants in NYC. Tone: warm, patient, simple language, never judgmental. Always remind people help exists and they are not alone. Rules: Only recommend organizations from the directory. Always include phone and address. If someone is in crisis give 311 and Safe Horizon (212)577-7700 first. Remind users services are available regardless of status. Short clear paragraphs. Never ask for personal information. RESOURCES: ${RESOURCES}`;
+const hist=[{role:'user',content:'Hello I just arrived.'},{role:'assistant',content:"Hello and welcome. I'm here to help you find free support in New York City — housing, food, legal aid, English classes, and healthcare. Everything is free. You are safe. What do you need today?"}];
+const msgsEl=document.getElementById('chatMsgs');
+const inputEl=document.getElementById('chatInput');
+const sendBtnEl=document.getElementById('sendBtn');
+const typingEl=document.getElementById('typingEl');
+function scroll(){msgsEl.scrollTop=msgsEl.scrollHeight;}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function appendMsg(role,html){
+  const w=document.createElement('div');w.className='msg '+(role==='user'?'user':'bot');
+  const av=document.createElement('div');av.className='msg-av';av.textContent=role==='user'?'U':'N';
+  const b=document.createElement('div');b.className='msg-bbl';b.innerHTML=html;
+  w.appendChild(av);w.appendChild(b);msgsEl.insertBefore(w,typingEl);scroll();
+}
+function fmt(t){t=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');return t.split(/\n\n+/).filter(p=>p.trim()).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('');}
+async function sendMsg(){
+  const text=inputEl.value.trim();if(!text)return;
+  appendMsg('user',`<p>${text.replace(/</g,'&lt;')}</p>`);
+  inputEl.value='';inputEl.style.height='auto';
+  sendBtnEl.disabled=true;typingEl.classList.add('show');scroll();
+  hist.push({role:'user',content:text});
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,system:SYS,messages:hist})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"I'm sorry — something went wrong. Call 311 or Safe Horizon at (212) 577-7700 for immediate help.";
+    hist.push({role:'assistant',content:reply});
+    typingEl.classList.remove('show');appendMsg('bot',fmt(reply));
+  }catch(e){typingEl.classList.remove('show');appendMsg('bot','<p>Trouble connecting. Call <strong>311</strong> or Safe Horizon at <strong>(212) 577-7700</strong>.</p>');}
+  sendBtnEl.disabled=false;inputEl.focus();
+}
+function sendQ(t){inputEl.value=t;sendMsg();}
+function toggleSuggest(btn){
+  const dd=document.getElementById('suggestDropdown');
+  const isOpen=dd.classList.contains('open');
+  dd.classList.toggle('open');
+  btn.classList.toggle('open');
+  btn.setAttribute('aria-expanded', !isOpen);
+}
+function pickSuggest(text){
+  const dd=document.getElementById('suggestDropdown');
+  const btn=document.querySelector('.suggest-toggle');
+  dd.classList.remove('open');
+  btn.classList.remove('open');
+  btn.setAttribute('aria-expanded','false');
+  sendQ(text);
+  document.getElementById('chat').scrollIntoView({behavior:'smooth'});
+}
+inputEl.focus();
 </script>
 </body>
 </html>
